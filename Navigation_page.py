@@ -29,37 +29,42 @@ def ChromeDriver():
         break
 
     for tr in browser.find_elements_by_xpath('//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr'):
-        Tender_id = ''
-        Document = ''
-        start_date = ''
-        Deadline = ''
-        SCHEDULED_DATE = ''
-        Title = ''
-        for Tender_id in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[1]'):
-            Tender_id = Tender_id.get_attribute('innerText').strip()
-            break
-        for Document in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[1]/a'):
-            Document = Document.get_attribute('href').strip()
-            Document = Document.partition("('")[2].partition("',")[0]
-            Document = f'https://dakota.cebw.org/cebwWeb/Bids?action=showDocument&documentId={str(Document)}&documentType=TERM'
-            break
-        for start_date in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[2]'):
-            start_date = start_date.get_attribute('innerText').strip()
-            break
-        for Deadline in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[3]'):
-            Deadline = Deadline.get_attribute('innerText')
-            break
-        for SCHEDULED_DATE in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[4]'):
-            SCHEDULED_DATE = SCHEDULED_DATE.get_attribute('innerText').strip()
-            break
-        tr_count += 1
-        for Title in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[1]'):
-            Title = Title.get_attribute('innerText').strip()
-            break
-        tr_count += 1
-        scrap_data(Tender_id, Document, start_date,Deadline, SCHEDULED_DATE, Title)
-        Global_var.Total += 1
-        print(f'Total: {str(Global_var.Total)} Deadline Not given: {Global_var.deadline_Not_given} duplicate: {Global_var.duplicate} inserted: {Global_var.inserted} expired: {Global_var.expired} QC Tenders: {Global_var.QC_Tenders}')
+        if tr_count != 14:
+            Tender_id = ''
+            Document = ''
+            start_date = ''
+            Deadline = ''
+            SCHEDULED_DATE = ''
+            Title = ''
+            for Tender_id in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[1]'):
+                Tender_id = Tender_id.get_attribute('innerText').strip()
+                break
+            for Document in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[1]/a'):
+                Document = Document.get_attribute('href').strip()
+                Document = Document.partition("('")[2].partition("',")[0]
+                Document = f'https://dakota.cebw.org/cebwWeb/Bids?action=showDocument&documentId={str(Document)}&documentType=TERM'
+                break
+            for start_date in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[2]'):
+                start_date = start_date.get_attribute('innerText').strip()
+                break
+            for Deadline in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[3]'):
+                Deadline = Deadline.get_attribute('innerText')
+                break
+            for SCHEDULED_DATE in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[4]'):
+                SCHEDULED_DATE = SCHEDULED_DATE.get_attribute('innerText').strip()
+                break
+            tr_count += 1
+            for Title in browser.find_elements_by_xpath(f'//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr[{str(tr_count)}]/td[1]'):
+                Title = Title.get_attribute('innerText').strip()
+                break
+            tr_count += 1
+            scrap_data(Tender_id, Document, start_date,Deadline, SCHEDULED_DATE, Title)
+            Global_var.Total += 1
+            print(f'Total: {str(Global_var.Total)} Deadline Not given: {Global_var.deadline_Not_given} duplicate: {Global_var.duplicate} inserted: {Global_var.inserted} expired: {Global_var.expired} QC Tenders: {Global_var.QC_Tenders}')
+        eles:
+            wx.MessageBox(f'Total: {str(Global_var.Total)}\nDeadline Not given: {Global_var.deadline_Not_given}\nduplicate: {Global_var.duplicate}\ninserted: {Global_var.inserted}\nexpired: {Global_var.expired}\nQC Tenders: {Global_var.QC_Tenders}','cebw.org', wx.OK | wx.ICON_INFORMATION)
+            browser.close()
+            sys.exit()
     wx.MessageBox(f'Total: {str(Global_var.Total)}\nDeadline Not given: {Global_var.deadline_Not_given}\nduplicate: {Global_var.duplicate}\ninserted: {Global_var.inserted}\nexpired: {Global_var.expired}\nQC Tenders: {Global_var.QC_Tenders}','cebw.org', wx.OK | wx.ICON_INFORMATION)
     browser.close()
     sys.exit()
@@ -126,8 +131,7 @@ def check_date(SegField):
     try:
         if deadline != '':
             datetime_object_deadline = datetime.strptime(deadline, '%Y-%m-%d')
-            datetime_object_curdate = datetime.strptime(
-                curdate_str, '%Y-%m-%d')
+            datetime_object_curdate = datetime.strptime(curdate_str, '%Y-%m-%d')
             timedelta_obj = datetime_object_deadline - datetime_object_curdate
             day = timedelta_obj.days
             if day > 0:
