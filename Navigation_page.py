@@ -58,7 +58,11 @@ def ChromeDriver():
             break
         tr_count += 1
         scrap_data(Tender_id, Document, start_date,Deadline, SCHEDULED_DATE, Title)
-
+        Global_var.Total += 1
+        print(f'Total: {str(Global_var.Total)} Deadline Not given: {Global_var.deadline_Not_given} duplicate: {Global_var.duplicate} inserted: {Global_var.inserted} expired: {Global_var.expired} QC Tenders: {Global_var.QC_Tenders}')
+    wx.MessageBox(f'Total: {str(Global_var.Total)}\nDeadline Not given: {Global_var.deadline_Not_given}\nduplicate: {Global_var.duplicate}\ninserted: {Global_var.inserted}\nexpired: {Global_var.expired}\nQC Tenders: {Global_var.QC_Tenders}','cebw.org', wx.OK | wx.ICON_INFORMATION)
+    browser.close()
+    sys.exit()
 
 def scrap_data(Tender_id, Document, start_date, Deadline, SCHEDULED_DATE, Title):
     SegField = []
