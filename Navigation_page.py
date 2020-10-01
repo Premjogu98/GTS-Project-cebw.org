@@ -29,7 +29,7 @@ def ChromeDriver():
         break
 
     for tr in browser.find_elements_by_xpath('//*[@id="body"]/form/table/tbody/tr/td/table/tbody/tr'):
-        if tr_count != 14:
+        if tr_count != 0:
             Tender_id = ''
             Document = ''
             start_date = ''
@@ -58,9 +58,12 @@ def ChromeDriver():
                 Title = Title.get_attribute('innerText').strip()
                 break
             tr_count += 1
-            scrap_data(Tender_id, Document, start_date,Deadline, SCHEDULED_DATE, Title)
-            Global_var.Total += 1
-            print(f'Total: {str(Global_var.Total)} Deadline Not given: {Global_var.deadline_Not_given} duplicate: {Global_var.duplicate} inserted: {Global_var.inserted} expired: {Global_var.expired} QC Tenders: {Global_var.QC_Tenders}')
+            if Title != "" and Deadline != "" and Tender_id != "":
+                scrap_data(Tender_id, Document, start_date,Deadline, SCHEDULED_DATE, Title)
+                Global_var.Total += 1
+                print(f'Total: {str(Global_var.Total)} Deadline Not given: {Global_var.deadline_Not_given} duplicate: {Global_var.duplicate} inserted: {Global_var.inserted} expired: {Global_var.expired} QC Tenders: {Global_var.QC_Tenders}')
+            else:
+                break
         else:
             wx.MessageBox(f'Total: {str(Global_var.Total)}\nDeadline Not given: {Global_var.deadline_Not_given}\nduplicate: {Global_var.duplicate}\ninserted: {Global_var.inserted}\nexpired: {Global_var.expired}\nQC Tenders: {Global_var.QC_Tenders}','cebw.org', wx.OK | wx.ICON_INFORMATION)
             browser.close()
@@ -114,6 +117,7 @@ def scrap_data(Tender_id, Document, start_date, Deadline, SCHEDULED_DATE, Title)
                 wx.MessageBox(' Short Desc Blank ', 'cebw.org',wx.OK | wx.ICON_INFORMATION)
             else:
                 check_date(SegField)
+                # pass
             a = False
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
