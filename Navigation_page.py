@@ -74,7 +74,7 @@ def ChromeDriver():
 
 def scrap_data(Tender_id, Document, start_date, Deadline, SCHEDULED_DATE, Title):
     SegField = []
-    for data in range(42):
+    for data in range(45):
         SegField.append('')
     a = True
     while a == True:
@@ -100,6 +100,10 @@ def scrap_data(Tender_id, Document, start_date, Deadline, SCHEDULED_DATE, Title)
             SegField[7] = 'BR'
             SegField[28] = 'http://www.cebw.org/en/biddings-in-progress'
             SegField[31] = 'cebw.org'
+            SegField[20] = ""
+            SegField[21] = "" 
+            SegField[42] = SegField[7]
+            SegField[43] = "" 
 
             for SegIndex in range(len(SegField)):
                 print(SegIndex, end=' ')
